@@ -107,26 +107,39 @@ def pregunta_05():
         ("E", 9, 1),  
     ]  
     """
-    maxmin_letra = {}
-    with open('data.csv', 'r') as archivo_csv:
-        lector_csv = csv.reader(archivo_csv, delimiter='\t')
+    import csv
+    
+    max_min = {}
+    
+    with open('data.csv') as file_csv:
+        file = csv.reader(file_csv,delimiter='\t')
+        
+        
+        for line in file:
+            col_1 = line[0]
+            col_2 = int(line[1])
+            
+            
+            if col_1 not in max_min.keys():
+                
+                max_min[col_1] = [col_2,col_2]
+            
+            if col_2 > max_min[col_1][0] :
+                max_min[col_1][0] = col_2
+            
+            if col_2 < max_min[col_1][1] :
+                max_min[col_1][1] = col_2
+            
+    
+            
+        
+    max_min = dict(sorted(max_min.items()))
+    
+    list_max_min = [(letra, num1, num2) for letra, (num1, num2) in list(max_min.items())]
 
-        for fila in lector_csv:
-            letra = fila[0]
-            valor = int(fila[1])
-            if letra in maxmin_letra:
-                valormax, valormin = maxmin_letra[letra]
-                valormax = max(valormax, valor)
-                valormin = min(valormin, valor)
-                maxmin_letra[letra] = (valormax, valormin)
-            else:
-                maxmin_letra[letra] = (valor, valor)
-    resultado = sorted(maxmin_letra.items())
-         
-    #for letra, (maximo, minimo) in resultado:
-    #    print(f"('{letra}', {maximo}, {minimo}),")
-    return resultado
-
+    
+     
+    return list_max_min
 
 def pregunta_06():
     """
@@ -356,24 +369,31 @@ def pregunta_11():
 
 
     """
-    suma = {}
-
-
-    with open('data.csv', 'r') as archivo_csv:
-        lector_csv = csv.reader(archivo_csv, delimiter='\t')
-
-        for fila in lector_csv:
-            letra_colum4 = fila[3].lower()
-            valor_colum2 = float(fila[1])
-            if letra_colum4 in suma:
-                suma[letra_colum4] += valor_colum2
-            else:
-                suma[letra_colum4] = valor_colum2
-    resultados = {k: v for k, v in sorted(suma.items())}
-
-
-    return resultados
-
+    import csv
+    
+    
+    dict_items = {}
+    
+        
+    with open('data.csv') as file_csv:
+        file = csv.reader(file_csv,delimiter='\t')
+        
+        for line in file:
+            col_2, col_4 = line[1],line[3]
+            
+            col_4=col_4.split(',')
+            
+            for key in col_4:
+                if key not in dict_items.keys():
+                    dict_items[key]= int(col_2)
+                
+                else:
+                    dict_items[key] += int(col_2)
+        
+        
+    dict_items = dict(sorted(dict_items.items()))       
+            
+    return dict_items
 
 def pregunta_12():
     """
@@ -390,36 +410,30 @@ def pregunta_12():
     }
 
     """
-    suma_por_letra = {}
-
-
-    with open('data.csv', 'r') as archivo_csv:
-        lector_csv = csv.reader(archivo_csv, delimiter='\t')
-
-        for fila in lector_csv:
-            letra_columna1 = fila[0]
-            valor_columna5 = fila[4].split(',')
-            for par in valor_columna5:
-                clave, valor = par.split(':')
-                valor = int(valor)
-                if letra_columna1 in suma_por_letra:
-                    if clave in suma_por_letra[letra_columna1]:
-                        suma_por_letra[letra_columna1][clave] += valor
-                    else:
-                        suma_por_letra[letra_columna1][clave] = valor
-                else:
-                    suma_por_letra[letra_columna1] = {clave: valor}
-
-    # Calcular la suma total por letra
-    suma_total_por_letra = {}
-    for letra, valores in suma_por_letra.items():
-        suma_total_por_letra[letra] = sum(valores.values())
-
-    # Ordenar el diccionario alfabéticamente por clave (letra)
-    suma_total_por_letra_ordenada = {k: v for k, v in sorted(suma_total_por_letra.items())}
-
-    # Llamar a la función y almacenar el resultado en una variable
-    resultado = suma_total_por_letra_ordenada
-
-
-    return resultado
+    import csv
+    
+    
+    dict_items = {}    
+    
+        
+    with open('data.csv') as file_csv:
+        file = csv.reader(file_csv,delimiter='\t')
+        
+        for line in file:
+            col_1, col_5 = line[0],line[4]
+            
+            col_5 = col_5.split(',')
+            item_sum = 0
+            for item in col_5:
+                item=item.split(':')
+                item_sum += int(item[1])
+            
+            if col_1 not in dict_items.keys():
+                dict_items[col_1] = item_sum
+            else:
+                dict_items[col_1] += item_sum
+    
+    
+    dict_items = dict(sorted(dict_items.items()))  
+    
+    return dict_items
